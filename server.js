@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
     res.status(200).send('Backend API is running successfully!');
 });
 
-// Health check routes (Cappy Studio လိုအပ်ချက်အတွက်)
+// Health check routes
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', message: 'Backend is running' });
 });
@@ -25,10 +25,9 @@ app.get('/api/health', (req, res) => {
 // POST /jobs - Job အသစ်စတင်ရန် (Groq API ဖြင့် Script ထုတ်ပေးခြင်း)
 app.post('/jobs', async (req, res) => {
     try {
-        const { topic, prompt, text, voice_id } = req.body;
+        const { topic, prompt, text } = req.body;
         const jobId = 'job_' + Date.now();
         
-        // ချက်ချင်း processing အနေနဲ့ စတင်ကြောင်း Response ပြန်ပေးပါ
         jobs[jobId] = {
             jobId,
             status: 'processing',
@@ -42,7 +41,6 @@ app.post('/jobs', async (req, res) => {
             message: 'Job started successfully'
         });
 
-        // Groq API ဖြင့် ဇာတ်ညွှန်းထုတ်ယူခြင်း
         let generatedScript = text || '';
         const groqApiKey = process.env.GROQ_API_KEY;
         const textPrompt = prompt || `Create an engaging short drama recap script about: ${topic || 'General'}`;
@@ -70,7 +68,6 @@ app.post('/jobs', async (req, res) => {
             generatedScript = "Default script for topic: " + (topic || "Untitled");
         }
 
-        // Job အခြေအနေကို completed သို့ ပြောင်းလဲသိမ်းဆည်းခြင်း
         jobs[jobId].script = generatedScript;
         jobs[jobId].status = 'completed';
 
@@ -79,4 +76,17 @@ app.post('/jobs', async (req, res) => {
     }
 });
 
-//
+// GET /jobs/:id - Job ၏ အခြေအနေနှင့် ရလဒ်ကို စစ်ဆေးရန်
+app.get('/jobs/:id', (req, res) => {
+    const { id } = req.params;
+    const job = jobs[id];
+    
+    if (!job) {
+        return res.status(404).json({ error: 'Job not found' });
+    }
+    
+    res.status(200).json(job);
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log('Server running on port ' + PORT));
