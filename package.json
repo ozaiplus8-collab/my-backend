@@ -1,7 +1,6 @@
 {
   "name": "cappy-studio-backend",
   "version": "1.0.0",
-  "description": "Cappy Studio — Video to Myanmar Subtitle & TTS",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
