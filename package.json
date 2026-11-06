@@ -1,6 +1,7 @@
 {
-  "name": "cappy-backend",
+  "name": "cappy-studio-backend",
   "version": "1.0.0",
+  "description": "Cappy Studio — Video to Myanmar Subtitle & TTS",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -10,5 +11,8 @@
     "cors": "^2.8.5",
     "multer": "^1.4.5-lts.1",
     "form-data": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
